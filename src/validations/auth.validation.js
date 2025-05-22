@@ -2,10 +2,7 @@ const Joi = require("joi");
 const { password } = require("./custom.validation");
 
 const register = {
-  body: Joi.object().keys({
-    firstName: Joi.string().required(),
-    lastName: Joi.string(),
-    fullName: Joi.string(),
+  body: Joi.object().keys({ 
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     role: Joi.string().required().valid("user", "admin", "superAdmin"),

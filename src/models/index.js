@@ -7,3 +7,5 @@ module.exports.TermsAndCondition = require('./termsConditions.model');
 module.exports.AboutUs = require('./aboutUs.model');
 module.exports.PrivacyPolicy = require('./privacyPolicy.model');
 module.exports.Support = require('./support.model');
+module.exports.School = require('./school.model');
+module.exports.Student = require('./student.model');
