@@ -20,7 +20,6 @@ const createPresentAttendance = catchAsync(async (req, res) => {
     );
 });
 
-
 const createOnLeaveAttendance = catchAsync(async (req, res) => {
     const data = req.body;
     // Logic to create attendance
@@ -36,8 +35,25 @@ const createOnLeaveAttendance = catchAsync(async (req, res) => {
     );
 });
 
+const getAllStudentsAttendance = catchAsync(async (req, res) => {
+    const { _id } = req.user;
+    const { classId } = req.params;
+    // Logic to get all students attendance
+    const result = await attendanceService.getAllStudentsAttendance({ userId: _id, classId });
+
+    res.status(httpStatus.OK).json(
+        response({
+            message: `All Students Attendance fetched successfully`,
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: result,
+        })
+    );
+});
+
 
 module.exports = {
     createPresentAttendance,
-    createOnLeaveAttendance
+    createOnLeaveAttendance,
+    getAllStudentsAttendance
 };

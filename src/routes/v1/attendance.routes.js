@@ -14,8 +14,11 @@ router
 router
     .route("/onLeave")
     .post(auth("user"), validate(attendanceValidation.attendance),
-        attendanceController.createOnLeaveAttendance); 
+        attendanceController.createOnLeaveAttendance);
 
+router
+    .route("/all-students/:classId")
+    .get(auth("common"), attendanceController.getAllStudentsAttendance);
 
 
 module.exports = router;
