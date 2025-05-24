@@ -13,4 +13,4 @@ const studentValidation = {
     },
 }
 
-module.exports = studentValidation;
+module.exports = { studentValidation };

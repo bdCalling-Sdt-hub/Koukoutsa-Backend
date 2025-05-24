@@ -1,4 +1,7 @@
+const httpStatus = require("http-status");
+const { Student } = require("../models");
 const School = require("../models/school.model");
+const ApiError = require("../utils/ApiError");
 
 const createSchool = async (schoolData, userId) => {
 
@@ -23,10 +26,31 @@ const deleteSchool = async (schoolId) => {
     await School.findByIdAndDelete(schoolId);
 };
 
+const addStudentToClass = async (classId, studentId) => {
+    const student = await Student.findById(studentId);
+    const classData = await School.findById(classId);
+    if (!student) {
+        throw new ApiError(httpStatus.NOT_FOUND, "Student not found");
+    }
+    if (!classData) {
+        throw new ApiError(httpStatus.NOT_FOUND, "Class not found");
+    }
+    if (classData.studentsIds.includes(studentId)) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Student already in class");
+    }
+    classData.studentsIds.push(studentId);
+    student.classId = classId;
+    await classData.save();
+    await student.save();
+    return student;
+};
+
+
 module.exports = {
     createSchool,
     getSchoolById,
     getSchoolAll,
     updateSchool,
-    deleteSchool
+    deleteSchool,
+    addStudentToClass
 };

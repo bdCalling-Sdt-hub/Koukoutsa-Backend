@@ -12,6 +12,13 @@ router
     .post(auth("user"), validate(studentValidation.createStudent), studentController.createStudent)
     .get(auth("user"), studentController.getAllStudents);
 
+router
+    .route("/:id")
+    .get(auth("user"), studentController.getStudentById)
+    .patch(auth("user"), studentController.updateStudent)
+    .delete(auth("user"), studentController.deleteStudent);
+
+
 
 
 

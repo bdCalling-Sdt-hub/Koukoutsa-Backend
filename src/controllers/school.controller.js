@@ -67,6 +67,19 @@ const deleteSchool = catchAsync(async (req, res) => {
     );
 });
 
+const addStudentToClass = catchAsync(async (req, res) => {
+    const { classId, studentId } = req.body;
+    const school = await schoolService.addStudentToClass(classId, studentId);
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Student Added to Class",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: school,
+        })
+    );
+});
+
 
 
 module.exports = {
@@ -74,5 +87,6 @@ module.exports = {
     getSchoolAll,
     getSchool,
     updateSchool,
-    deleteSchool
+    deleteSchool,
+    addStudentToClass
 };  

@@ -16,5 +16,12 @@ const schoolValidation = {
     },
 }
 
-module.exports = schoolValidation;
+const addStudent = {
+    body: Joi.object().keys({
+        classId: Joi.string().required(),
+        studentId: Joi.string().required(),
+    }),
+}
+
+module.exports = { schoolValidation, addStudent };
 

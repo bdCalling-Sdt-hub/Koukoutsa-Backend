@@ -34,17 +34,66 @@ const getAllStudents = catchAsync(async (req, res) => {
     );
 });
 const getStudentById = catchAsync(async (req, res) => {
+    const { _id } = req.user;
     // Logic to get a student by ID
-    res.status(200).send({ message: `Student with ID ${req.params.id} retrieved successfully` });
+    const result = await studentService.getStudentById(req.params.id);
+    if (!result) {
+        return res.status(httpStatus.NOT_FOUND).json(
+            response({
+                message: "Student not found",
+                status: "Error",
+                statusCode: httpStatus.NOT_FOUND,
+            })
+        );
+    }
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Student retrieved successfully",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: result,
+        })
+    )
 });
 const updateStudent = catchAsync(async (req, res) => {
+    const { _id } = req.user;
     // Logic to update a student
-    res.status(200).send({ message: `Student with ID ${req.params.id} updated successfully` });
+    const result = await studentService.updateStudent(req.params.id, _id, req.body);
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Student updated successfully",
+            status: "OK",
+            statusCode: httpStatus.OK
+        })
+    );
 });
 const deleteStudent = catchAsync(async (req, res) => {
     // Logic to delete a student
-    res.status(200).send({ message: `Student with ID ${req.params.id} deleted successfully` });
+    const result = await studentService.deleteStudent(req.params.id);
+    if (!result) {
+        return res.status(httpStatus.NOT_FOUND).json(
+            response({
+                message: "Student not found",
+                status: "Error",
+                statusCode: httpStatus.NOT_FOUND,
+            })
+        );
+    }
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Student deleted successfully",
+            status: "OK",
+            statusCode: httpStatus.OK
+        })
+    );
 });
+
+
+// cron.shudule 
+
+
+
+
 
 
 

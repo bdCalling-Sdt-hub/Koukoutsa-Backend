@@ -34,4 +34,9 @@ router
         schoolController.deleteSchool
     );
 
+
+router
+    .route("/add-student")
+    .post(auth("user"), validate(schoolValidation.addStudent), schoolController.addStudentToClass);
+
 module.exports = router;
