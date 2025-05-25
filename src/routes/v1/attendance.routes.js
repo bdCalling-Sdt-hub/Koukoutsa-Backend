@@ -20,5 +20,10 @@ router
     .route("/all-students/:classId")
     .get(auth("common"), attendanceController.getAllStudentsAttendance);
 
+// get students by date 
+router 
+    .route("/students-by-date")
+    .get(auth("common"), attendanceController.getStudentsByDate);
+
 
 module.exports = router;

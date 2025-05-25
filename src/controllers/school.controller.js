@@ -68,6 +68,7 @@ const deleteSchool = catchAsync(async (req, res) => {
 });
 
 const addStudentToClass = catchAsync(async (req, res) => {
+   
     const { classId, studentId } = req.body;
     const school = await schoolService.addStudentToClass(classId, studentId);
     res.status(httpStatus.OK).json(
@@ -78,6 +79,7 @@ const addStudentToClass = catchAsync(async (req, res) => {
             data: school,
         })
     );
+    
 });
 
 

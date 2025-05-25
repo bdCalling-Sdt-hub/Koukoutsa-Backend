@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { User } = require("../models");
+const { User, Notification } = require("../models");
 const ApiError = require("../utils/ApiError");
 const { sendEmailVerification } = require("./email.service");
 const unlinkImages = require("../common/unlinkImage");
@@ -8,15 +8,30 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
+
   const oneTimeCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
 
-  if (userBody.role === "user" || userBody.role === "admin") {
+  console.log(oneTimeCode);
+  // Create the user first
+  const user = await User.create({ ...userBody, oneTimeCode });
 
-    sendEmailVerification(userBody.email, oneTimeCode);
+  console.log(user);
+
+  // Send verification email for specific roles
+  if (user.role === "user" || user.role === "admin") {
+    sendEmailVerification(user.email, oneTimeCode);
   }
-  return User.create({ ...userBody, oneTimeCode });
-};
 
+  // Create a notification about the new user
+  const data = await Notification.create({
+    userId: user._id, 
+    content: "A new user has been created",
+    type: "success",
+  });
+ 
+
+  return user;
+};
 
 
 const queryUsers = async (filter, options) => {

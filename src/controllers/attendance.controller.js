@@ -34,7 +34,6 @@ const createOnLeaveAttendance = catchAsync(async (req, res) => {
         })
     );
 });
-
 const getAllStudentsAttendance = catchAsync(async (req, res) => {
     const { _id } = req.user;
     const { classId } = req.params;
@@ -51,9 +50,25 @@ const getAllStudentsAttendance = catchAsync(async (req, res) => {
     );
 });
 
+const getStudentsByDate = catchAsync(async (req, res) => {
+    const { _id } = req.user;
+    const { classId, date } = req.query;
+    // Logic to get all students attendance
+    const result = await attendanceService.getStudentsByDate({ userId: _id, classId, date });
+
+    res.status(httpStatus.OK).json(
+        response({
+            message: `All Students Attendance fetched successfully`,
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: result,
+        })
+    );
+});
 
 module.exports = {
     createPresentAttendance,
     createOnLeaveAttendance,
-    getAllStudentsAttendance
+    getAllStudentsAttendance,
+    getStudentsByDate
 };

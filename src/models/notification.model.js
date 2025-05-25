@@ -18,12 +18,7 @@ const notificationSchema = new Schema({
         required: false,
         default: null
     },
-    role: {
-        type: String,
-        required: false,
-        enum: roles,
-        default: null,
-    },
+    
     title: {
         type: String,
     },

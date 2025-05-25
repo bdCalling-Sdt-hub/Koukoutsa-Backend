@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const { Student, Attendance } = require("../models");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
+const twilio = require('twilio');
 
 
 const createPresentAttendance = async (data) => {
@@ -62,24 +63,28 @@ const createOnLeaveAttendance = async (data) => {
 };
 
 const getAllStudentsAttendance = async ({ userId, classId }) => {
-
+    // Find students for this school and class first
     const students = await Attendance.find({ schoolId: userId, classId });
+
+    console.log("students", students);
+
     if (!students || students.length === 0) {
         throw new ApiError(httpStatus.NOT_FOUND, "No students found for this school");
     }
 
-    const startOfDay = new Date();
-    startOfDay.setUTCHours(0, 0, 0, 0);
-    const endOfDay = new Date(startOfDay);
-    endOfDay.setUTCDate(endOfDay.getUTCDate() + 1);
+    // Get start of today in UTC
+    const now = new Date();
+    const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0));
 
+    // Get start of next day in UTC
+    const endOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
 
+    // Query attendance records where classDate is between startOfDay (inclusive) and endOfDay (exclusive)
     const todayAttendanceRecords = await Attendance.find({
         schoolId: userId,
         classId,
         classDate: { $gte: startOfDay, $lt: endOfDay },
     }).populate("studentId");
-
 
     return {
         results: todayAttendanceRecords,
@@ -87,8 +92,30 @@ const getAllStudentsAttendance = async ({ userId, classId }) => {
     };
 };
 
+const getStudentsByDate = async ({ userId, classId, date }) => {
+    // Get start of today in UTC
+    const now = new Date(date);
+    const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0));
 
-cron.schedule("0 0 * * *", async () => {
+    // Get start of next day in UTC
+    const endOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+
+    // Query attendance records where classDate is between startOfDay (inclusive) and endOfDay (exclusive)
+    const todayAttendanceRecords = await Attendance.find({
+        schoolId: userId,
+        classId,
+        classDate: { $gte: startOfDay, $lt: endOfDay },
+    }).populate("studentId");
+
+    return {
+        results: todayAttendanceRecords,
+        totalStudents: todayAttendanceRecords.length,
+    };
+};
+
+// create Attendance records every day at 08:00AM
+
+cron.schedule("0 8 * * *", async () => {
     try {
         const students = await Student.find();
 
@@ -170,27 +197,52 @@ cron.schedule("0 0 * * *", async () => {
 
 //now every day at 9:01 AM is going to message every student prent phone number if thay are absent
 
- 
-const twilio = require('twilio');
+
+
 
 // Replace with your credentials
-const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
-const authToken = '942a70831299aa408cf9e1015dfdf09e';
 
-const client = twilio(accountSid, authToken);
 
-cron.schedule("* * * * *", async () => {
-    try {
-        const message = await client.messages.create({
-            body: 'Hello from Node.js!',
-            from: '+15856678949', // Your Twilio phone number in E.164 format
-            to: '+8801708784404'   // Recipient's phone number in E.164 format
-        });
-        console.log('Message sent, SID:', message.sid);
-    } catch (error) {
-        console.error('Error sending message:', error);
-    }
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//================== every day SMS to student parent by phone number =============================
+
+// const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
+// const authToken = '43246281943ebc58239fc088c1db19e1    || testing';
+
+// const client = twilio(accountSid, authToken);
+
+// cron.schedule("50 9 * * *", async () => {
+//     try {
+//         const message = await client.messages.create({
+//             body: 'Hello from Node.js!',
+//             from: '+15856678949', // Your Twilio phone number in E.164 format
+//             to: '+8801708784404'   // Recipient's phone number in E.164 format
+//         });
+//         console.log('Message sent, SID:', message.sid);
+//     } catch (error) {
+//         console.error('Error sending message:', error);
+//     }
+// });
+
 
 
 
@@ -199,5 +251,6 @@ cron.schedule("* * * * *", async () => {
 module.exports = {
     createPresentAttendance,
     createOnLeaveAttendance,
-    getAllStudentsAttendance
+    getAllStudentsAttendance,
+    getStudentsByDate
 };

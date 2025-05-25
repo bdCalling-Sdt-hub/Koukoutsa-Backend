@@ -6,6 +6,10 @@ const docsRoute = require("./docs.routes");
 const schoolRoute = require("./school.routes");
 const studentRoute = require("./student.routes");
 const attendanceRoute = require("./attendance.routes");
+const paymentRoute = require("./payment.routes");
+const notificationRoute = require("./notification.routes");
+const subscriptionRoute = require("./subscription.routes.js");
+const infoRoute = require("./info.routes.js");
 
 
 const router = express.Router();
@@ -31,6 +35,24 @@ const defaultRoutes = [
     path: "/attendance",
     route: attendanceRoute,
   },
+  {
+    path: "/subscription",
+    route: subscriptionRoute
+  },
+  {
+    path: "/paymnet",
+    route: paymentRoute,
+  },
+  {
+    path: "/info",
+    route: infoRoute
+  },
+
+
+  {
+    path: "/notification",
+    route: notificationRoute
+  }
 
 ];
 

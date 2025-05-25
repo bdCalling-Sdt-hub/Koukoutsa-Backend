@@ -67,6 +67,20 @@ const userSchema = mongoose.Schema(
       required: false,
       default: null
     },
+    isSubscribed: {
+      type: Boolean,
+      default: false
+    },
+    subscriptionEndDate: {
+      type: Date,
+      required: false,
+      default: null
+    },
+    subscriptionId: {
+      type: String,
+      required: false,
+      default: null
+    },
     nidNumber: {
       type: Number,
       required: false,
