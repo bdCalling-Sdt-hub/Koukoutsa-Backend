@@ -13,6 +13,8 @@ const router = express.Router();
 
 router.route("/self/in").get(auth("common"), userController.getProfile);
 
+
+
 router
   .route("/self/update")
   .patch(
@@ -23,6 +25,23 @@ router
     userController.updateProfile
   );
 
-  
+router
+  .route("/all")
+  .get(
+    auth("common"),
+    userController.getAllUsers
+  );
+
+router
+  .route("/:id")
+  .get(auth("common"), userController.getUserById)
+
+router
+  .route("/dashboard/status")
+  .get(auth("common"), userController.getUsersStatus)
+
+router
+  .route("/recent/users")
+  .get(auth("common"), userController.getRecentUsers)
 
 module.exports = router;

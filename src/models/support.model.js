@@ -1,15 +1,23 @@
 const mongoose = require("mongoose");
 
 const supportSchema = new mongoose.Schema(
+ 
   {
-    content: { 
-      type: String, 
-      required: [true, "Content is required"], 
-      minlength: 10, 
-      maxlength: 2000
+    email: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
+    phoneNumber: {
+      type: String,
+      unique: true,
+      trim: true,
+    },
+
   },
-  { 
+
+  {
     timestamps: true,
     versionKey: false
   }

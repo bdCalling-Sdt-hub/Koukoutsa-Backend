@@ -48,7 +48,6 @@ const defaultRoutes = [
     route: infoRoute
   },
 
-
   {
     path: "/notification",
     route: notificationRoute

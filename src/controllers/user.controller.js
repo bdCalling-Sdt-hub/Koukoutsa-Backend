@@ -137,6 +137,56 @@ const deleteUser = catchAsync(async (req, res) => {
   );
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userService.getAllUsers();
+  res.status(httpStatus.OK).json(
+    response({
+      message: "All Users",
+      status: "OK",
+      statusCode: httpStatus.OK,
+      data: users,
+    })
+  );
+});
+
+const getUserById = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.params.id);
+  res.status(httpStatus.OK).json(
+    response({
+      message: "User",
+      status: "OK",
+      statusCode: httpStatus.OK,
+      data: user,
+    })
+  );
+});
+
+const getUsersStatus = catchAsync(async (req, res) => {
+
+  const users = await userService.getUsersStatus();
+  res.status(httpStatus.OK).json(
+    response({
+      message: "All Users",
+      status: "OK",
+      statusCode: httpStatus.OK,
+      data: users,
+    })
+  );
+});
+
+
+const getRecentUsers = catchAsync(async (req, res) => {
+  const users = await userService.getRecentUsers();
+  res.status(httpStatus.OK).json(
+    response({
+      message: "All Users",
+      status: "OK",
+      statusCode: httpStatus.OK,
+      data: users,
+    })
+  );
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -145,4 +195,8 @@ module.exports = {
   updateUser,
   updateProfile,
   deleteUser,
+  getAllUsers,
+  getUserById,
+  getUsersStatus,
+  getRecentUsers
 };

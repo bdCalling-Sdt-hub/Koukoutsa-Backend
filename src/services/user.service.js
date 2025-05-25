@@ -24,11 +24,11 @@ const createUser = async (userBody) => {
 
   // Create a notification about the new user
   const data = await Notification.create({
-    userId: user._id, 
+    userId: user._id,
     content: "A new user has been created",
     type: "success",
   });
- 
+
 
   return user;
 };
@@ -122,6 +122,30 @@ const isUpdateUser = async (userId, updateBody) => {
   return user;
 };
 
+
+const getAllUsers = async () => {
+  const totalUsers = await User.find({ role: "user", isDeleted: false });
+  return {
+    totalUsers: totalUsers.length,
+    users: totalUsers
+  };
+};
+
+const getUsersStatus = async () => {
+  const totalUsers = await User.find({ role: "user", isDeleted: false });
+  const totalSubscribers = await User.find({ role: "user", isSubscribed: true, isDeleted: false });
+  return {
+    totalUsers: totalUsers.length,
+    totalSubscribers: totalSubscribers.length,
+
+  };
+};
+
+const getRecentUsers = async () => {
+  const recentUsers = await User.find({ role: "user", isDeleted: false }).sort({ createdAt: -1 }).limit(5);
+  return recentUsers;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -129,5 +153,8 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
-  isUpdateUser
+  isUpdateUser,
+  getAllUsers,
+  getUsersStatus,
+  getRecentUsers
 };

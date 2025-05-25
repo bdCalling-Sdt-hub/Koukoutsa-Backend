@@ -3,9 +3,9 @@ module.exports.User = require('./user.model');
 
 
 module.exports.Notification = require('./notification.model');
-module.exports.TermsAndCondition = require('./termsConditions.model');
+module.exports.TermsConditions = require('./termsConditions.model');
 module.exports.AboutUs = require('./aboutUs.model');
-module.exports.PrivacyPolicy = require('./privacyPolicy.model');
+module.exports.Privacy = require('./privacyPolicy.model');
 module.exports.Support = require('./support.model');
 module.exports.School = require('./school.model');
 module.exports.Student = require('./student.model');
