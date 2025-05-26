@@ -77,10 +77,12 @@ const userSchema = mongoose.Schema(
       default: null
     },
     subscriptionId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subscription',
       required: false,
       default: null
     },
+
     nidNumber: {
       type: Number,
       required: false,

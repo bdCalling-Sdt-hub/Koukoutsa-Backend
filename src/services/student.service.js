@@ -20,7 +20,7 @@ const getStudentById = async (studentId) => {
 
 const updateStudent = async (studentId, schoolId, studentData) => {
 
-    const checktoSeeIfStudentExists = await Student.findOne({ _id: studentId, schoolId });
+    const checktoSeeIfStudentExists = await Student.findOne({ _id: studentId });
 
     if (!checktoSeeIfStudentExists) {
         throw new ApiError(httpStatus.NOT_FOUND, "Student does not exist");

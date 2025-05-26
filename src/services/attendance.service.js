@@ -66,10 +66,10 @@ const getAllStudentsAttendance = async ({ userId, classId }) => {
     // Find students for this school and class first
     const students = await Attendance.find({ schoolId: userId, classId });
 
-    console.log("students", students);
+
 
     if (!students || students.length === 0) {
-        throw new ApiError(httpStatus.NOT_FOUND, "No students found for this school");
+        throw new ApiError(httpStatus.NOT_FOUND, "No students found for this class");
     }
 
     // Get start of today in UTC
@@ -113,9 +113,10 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
     };
 };
 
-// create Attendance records every day at 08:00AM
+// create Attendance records every day at 12:00AM
 
-cron.schedule("0 8 * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
+
     try {
         const students = await Student.find();
 
@@ -134,6 +135,8 @@ cron.schedule("0 8 * * *", async () => {
     } catch (error) {
         console.error("Error creating attendance records:", error);
     }
+
+
 });
 
 

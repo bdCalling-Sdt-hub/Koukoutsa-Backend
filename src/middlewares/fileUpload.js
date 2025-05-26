@@ -1,5 +1,5 @@
 const multer = require("multer");
-const path = require("path");
+const path = require("path"); 
 
 module.exports = function (UPLOADS_FOLDER) {
   const storage = multer.diskStorage({
@@ -7,6 +7,9 @@ module.exports = function (UPLOADS_FOLDER) {
       cb(null, UPLOADS_FOLDER); // Use the provided destination folder
     },
     filename: (req, file, cb) => {
+
+      console.log({ req, file });
+
       const fileExt = path.extname(file.originalname);
       const filename =
         file.originalname

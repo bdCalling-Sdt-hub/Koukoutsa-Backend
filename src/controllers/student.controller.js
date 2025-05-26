@@ -5,8 +5,25 @@ const catchAsync = require("../utils/catchAsync");
 
 
 const createStudent = catchAsync(async (req, res) => {
+
+    if (req.body.interest) {
+        const parsedInterest = JSON.parse(req.body.interest);
+        req.body.interest = parsedInterest;
+    }
+    const image = {};
+    console.log(req.file);
+    if (req.file) {
+        image.url = "/uploads/users/" + req.file.filename;
+        image.path = req.file.path;
+    }
+    if (req.file) {
+        req.body.studentImage = image;
+    }
+
+
     // Logic to create a student
     const { _id } = req.user;
+
     const result = await studentService.createStudent(req.body, _id);
 
     res.status(httpStatus.CREATED).json(
@@ -56,6 +73,21 @@ const getStudentById = catchAsync(async (req, res) => {
     )
 });
 const updateStudent = catchAsync(async (req, res) => {
+
+    if (req.body.interest) {
+        const parsedInterest = JSON.parse(req.body.interest);
+        req.body.interest = parsedInterest;
+    }
+    const image = {};
+    console.log(req.file);
+    if (req.file) {
+        image.url = "/uploads/users/" + req.file.filename;
+        image.path = req.file.path;
+    }
+    if (req.file) {
+        req.body.studentImage = image;
+    }
+
     const { _id } = req.user;
     // Logic to update a student
     const result = await studentService.updateStudent(req.params.id, _id, req.body);

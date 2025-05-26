@@ -8,7 +8,7 @@ const router = express.Router();
 router
     .route("/")
     .post(auth("commonAdmin"), subscriptionController.createSubscription)
-    .get(auth("commonAdmin"), subscriptionController.getAllSubscription);
+    .get(auth("common"), subscriptionController.getAllSubscription);
 
 router
     .route("/:id")
