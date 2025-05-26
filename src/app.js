@@ -62,7 +62,7 @@ app.use("/api/v1", routes);
 
 //testing API is alive
 app.get("/api/v1/test", (req, res) => {
-   
+
   res.send({ message: "Server is running successfully" });
 });
 
