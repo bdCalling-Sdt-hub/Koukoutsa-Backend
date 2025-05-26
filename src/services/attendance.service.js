@@ -33,7 +33,6 @@ const createPresentAttendance = async (data) => {
     return updatedResult;
 };
 
-
 const createOnLeaveAttendance = async (data) => {
     const { studentId } = data;
     if (!studentId || !Array.isArray(studentId) || studentId.length === 0) {
@@ -116,13 +115,18 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 // create Attendance records every day at 12:00AM
 
 cron.schedule("0 0 * * *", async () => {
-
     try {
-        const students = await Student.find();
+        const students = await Student.find({ classId: { $exists: true, $ne: null } });
 
-        const attendanceRecords = students.map(student => ({
+        if (!students || students.length === 0) {
+            console.log("No students found to create attendance records.");
+            return;
+        }
+
+
+        const attendanceRecords = await students.map(student => ({
             schoolId: student.schoolId,
-            classId: student.classId,
+            classId: student.classId, // Assuming classId can be null if not assigned
             studentId: student._id,
             classDate: new Date(),          // current date/time for the attendance record
             attendanceType: "absent"       // default attendance type; you can change this logic if needed
@@ -130,12 +134,11 @@ cron.schedule("0 0 * * *", async () => {
 
         // Insert many attendance records at once
         await Attendance.insertMany(attendanceRecords);
+        console.log("Attendance records created successfully for all students.", attendanceRecords.length, "records created.");
 
-        console.log(`Attendance records created for ${students.length} students at ${new Date().toISOString()}`);
     } catch (error) {
         console.error("Error creating attendance records:", error);
     }
-
 
 });
 
@@ -198,29 +201,6 @@ cron.schedule("0 0 * * *", async () => {
 //     }
 // });
 
-//now every day at 9:01 AM is going to message every student prent phone number if thay are absent
-
-
-
-
-// Replace with your credentials
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -233,7 +213,7 @@ cron.schedule("0 0 * * *", async () => {
 
 // const client = twilio(accountSid, authToken);
 
-// cron.schedule("50 9 * * *", async () => {
+// cron.schedule("15 9 * * *", async () => {
 //     try {
 //         const message = await client.messages.create({
 //             body: 'Hello from Node.js!',

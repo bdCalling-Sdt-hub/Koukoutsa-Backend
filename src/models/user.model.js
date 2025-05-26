@@ -37,7 +37,7 @@ const userSchema = mongoose.Schema(
     profileImage: {
       type: String,
       required: false,
-      default: null
+      default: "/uploads/users/user.png",
     },
     password: {
       type: String,
