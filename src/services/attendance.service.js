@@ -112,35 +112,7 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
     };
 };
 
-// create Attendance records every day at 12:00AM
 
-cron.schedule("0 0 * * *", async () => {
-    try {
-        const students = await Student.find({ classId: { $exists: true, $ne: null } });
-
-        if (!students || students.length === 0) {
-            console.log("No students found to create attendance records.");
-            return;
-        }
-
-
-        const attendanceRecords = await students.map(student => ({
-            schoolId: student.schoolId,
-            classId: student.classId, // Assuming classId can be null if not assigned
-            studentId: student._id,
-            classDate: new Date(),          // current date/time for the attendance record
-            attendanceType: "absent"       // default attendance type; you can change this logic if needed
-        }));
-
-        // Insert many attendance records at once
-        await Attendance.insertMany(attendanceRecords);
-        console.log("Attendance records created successfully for all students.", attendanceRecords.length, "records created.");
-
-    } catch (error) {
-        console.error("Error creating attendance records:", error);
-    }
-
-});
 
 
 // every day at 9:01 AM is going to message every student prent phone viber if thay are absent
@@ -202,6 +174,36 @@ cron.schedule("0 0 * * *", async () => {
 // });
 
 
+
+
+
+// create Attendance records every day at 12:00AM
+cron.schedule("0 0 * * *", async () => {
+    try {
+        const students = await Student.find({ classId: { $exists: true, $ne: null } });
+
+        if (!students || students.length === 0) {
+            console.log("No students found to create attendance records.");
+            return;
+        }
+
+        const attendanceRecords = await students.map(student => ({
+            schoolId: student.schoolId,
+            classId: student.classId, // Assuming classId can be null if not assigned
+            studentId: student._id,
+            classDate: new Date(),          // current date/time for the attendance record
+            attendanceType: "absent"       // default attendance type; you can change this logic if needed
+        }));
+
+        // Insert many attendance records at once
+        await Attendance.insertMany(attendanceRecords);
+        console.log("Attendance records created successfully for all students.", attendanceRecords.length, "records created.");
+
+    } catch (error) {
+        console.error("Error creating attendance records:", error);
+    }
+
+});
 
 
 
