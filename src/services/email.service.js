@@ -28,14 +28,14 @@ const sendEmailVerification = async (to, otp) => {
   <body style="background-color: #f3f4f6; padding: 2rem; font-family: Arial, sans-serif; color: #333;">
     <div
         style="max-width: 32rem; margin: 0 auto; background-color: #ffffff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); text-align: center;">
-        <img src="https://raw.githubusercontent.com/shadat-hossan/Image-server/refs/heads/main/NEXMOTAG.jpeg"
+        <img src="https://res.cloudinary.com/nerob/image/upload/v1748324442/ForBdcolling/uwmed4mfimkssb7hlgjt.png"
             alt="NEXMO TAG" style="max-width: 10rem; margin-bottom: 1.5rem;">
-        <h1 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: #1f2937;">Welcome to NEXMO TAG
+        <h1 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; color: #1f2937;">Welcome to Koukoutsa!
         </h1>
-        <p style="color: #4b5563; margin-bottom: 1.5rem;">Thank you for joining NEXMO TAG! Your account is almost
+        <p style="color: #4b5563; margin-bottom: 1.5rem;">Thank you for joining Koukoutsa! Your account is almost
             ready.</p>
         <div
-            style="background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #ffffff; padding: 1rem; border-radius: 0.5rem; font-size: 2rem; font-weight: 800; letter-spacing: 0.1rem; margin-bottom: 1.5rem;">
+            style="background: linear-gradient(135deg,rgb(35, 38, 43),rgb(0, 0, 0)); color: #ffffff; padding: 1rem; border-radius: 0.5rem; font-size: 2rem; font-weight: 800; letter-spacing: 0.1rem; margin-bottom: 1.5rem;">
             ${otp}
         </div>
         <p style="color: #4b5563; margin-bottom: 1.5rem;">Collect this code to verify your account.</p>
