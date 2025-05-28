@@ -172,11 +172,10 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 //         console.error("Error checking for absent students:", error);
 //     }
 // });
- 
 
 
-// create Attendance records every day at 12:00AM
-cron.schedule("0 0 * * *", async () => {
+// create Attendance records every this day at 01:00 AM
+cron.schedule("0 1 * * *", async () => {
     try {
         const students = await Student.find({ classId: { $exists: true, $ne: null } });
 
@@ -185,23 +184,24 @@ cron.schedule("0 0 * * *", async () => {
             return;
         }
 
-        const attendanceRecords = await students.map(student => ({
+        const attendanceRecords = students.map(student => ({
             schoolId: student.schoolId,
-            classId: student.classId, // Assuming classId can be null if not assigned
+            classId: student.classId,
             studentId: student._id,
-            classDate: new Date(),          // current date/time for the attendance record
-            attendanceType: "absent"       // default attendance type; you can change this logic if needed
+            classDate: new Date(),
+            attendanceType: "absent",
         }));
 
-        // Insert many attendance records at once
         await Attendance.insertMany(attendanceRecords);
-        console.log("Attendance records created successfully for all students.", attendanceRecords.length, "records created.");
 
+        console.log(
+            `Attendance records created successfully for all students. ${attendanceRecords.length} records created.`
+        );
     } catch (error) {
         console.error("Error creating attendance records:", error);
     }
-
 });
+
 
 
 
