@@ -172,9 +172,7 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 //         console.error("Error checking for absent students:", error);
 //     }
 // });
-
-
-
+ 
 
 
 // create Attendance records every day at 12:00AM
