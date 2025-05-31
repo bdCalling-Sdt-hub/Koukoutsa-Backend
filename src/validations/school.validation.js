@@ -9,7 +9,7 @@ const schoolValidation = {
             schoolId: Joi.string(),
             className: Joi.string().required(),
             teacher: Joi.string().required(),
-            setAlertTime: Joi.date().required(),
+            setAlertTime: Joi.string().required(),
             totalStudents: Joi.number(),
             studentsIds: Joi.array().items(Joi.string()),
         }),

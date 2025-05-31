@@ -16,7 +16,9 @@ const classSchema = new mongoose.Schema({
         trim: true,
     },
     setAlertTime: {
-        type: Date,
+        type: String,
+        required: true,
+        trim: true,
     },
     totalStudents: {
         type: Number,

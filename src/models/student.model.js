@@ -16,8 +16,12 @@ const studentSchema = new mongoose.Schema({
     required: true,
   },
   studentImage: {
-    url: { type: String, required: true },
-    path: { type: String, required: true },
+    url: { type: String },
+    path: { type: String },
+  },
+  countryCode: {
+    type: String,
+    required: true
   },
   contactPerson1Name: {
     type: String,

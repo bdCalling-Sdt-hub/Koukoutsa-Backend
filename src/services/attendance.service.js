@@ -115,7 +115,61 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 
 
 
-// every day at 9:01 AM is going to message every student prent phone viber if thay are absent
+
+// create Attendance records every this day at 8:00 PM
+cron.schedule("0 20 * * *", async () => {
+    try {
+        const students = await Student.find({ classId: { $exists: true, $ne: null } });
+
+        if (!students || students.length === 0) {
+            console.log("No students found to create attendance records.");
+            return;
+        }
+
+        const attendanceRecords = students.map(student => ({
+            schoolId: student.schoolId,
+            classId: student.classId,
+            studentId: student._id,
+            classDate: new Date(),
+            attendanceType: "absent",
+        }));
+
+        await Attendance.insertMany(attendanceRecords);
+
+        console.log(
+            `Attendance records created successfully for all students. ${attendanceRecords.length} records created.`
+        );
+    } catch (error) {
+        console.error("Error creating attendance records:", error);
+    }
+});
+
+
+
+
+//================== every day SMS to student parent by phone number =============================
+
+// const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
+// const authToken = '43246281943ebc58239fc088c1db19e1    || testing';
+
+// const client = twilio(accountSid, authToken);
+
+// cron.schedule("15 9 * * *", async () => {
+//     try {
+//         const message = await client.messages.create({
+//             body: 'Hello from Node.js!',
+//             from: '+15856678949', // Your Twilio phone number in E.164 format
+//             to: '+8801708784404'   // Recipient's phone number in E.164 format
+//         });
+//         console.log('Message sent, SID:', message.sid);
+//     } catch (error) {
+//         console.error('Error sending message:', error);
+//     }
+// });
+
+
+
+//====================  every day at 9:01 AM is going to message every student prent phone viber if thay are absent ====================
 
 // const axios = require('axios');
 // const VIBER_AUTH_TOKEN = '4c69729d7a1c90fe-60e6c4c7cfbc1f4a-b39ab953bf1804b4'; // Replace with your bot token
@@ -172,60 +226,6 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 //         console.error("Error checking for absent students:", error);
 //     }
 // });
-
-
-// create Attendance records every this day at 01:00 AM
-cron.schedule("0 1 * * *", async () => {
-    try {
-        const students = await Student.find({ classId: { $exists: true, $ne: null } });
-
-        if (!students || students.length === 0) {
-            console.log("No students found to create attendance records.");
-            return;
-        }
-
-        const attendanceRecords = students.map(student => ({
-            schoolId: student.schoolId,
-            classId: student.classId,
-            studentId: student._id,
-            classDate: new Date(),
-            attendanceType: "absent",
-        }));
-
-        await Attendance.insertMany(attendanceRecords);
-
-        console.log(
-            `Attendance records created successfully for all students. ${attendanceRecords.length} records created.`
-        );
-    } catch (error) {
-        console.error("Error creating attendance records:", error);
-    }
-});
-
-
-
-
-
-//================== every day SMS to student parent by phone number =============================
-
-// const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
-// const authToken = '43246281943ebc58239fc088c1db19e1    || testing';
-
-// const client = twilio(accountSid, authToken);
-
-// cron.schedule("15 9 * * *", async () => {
-//     try {
-//         const message = await client.messages.create({
-//             body: 'Hello from Node.js!',
-//             from: '+15856678949', // Your Twilio phone number in E.164 format
-//             to: '+8801708784404'   // Recipient's phone number in E.164 format
-//         });
-//         console.log('Message sent, SID:', message.sid);
-//     } catch (error) {
-//         console.error('Error sending message:', error);
-//     }
-// });
-
 
 
 
