@@ -200,6 +200,8 @@ const sendSMS = async (to, messageText) => {
     }
 };
 
+// viber 
+
 // Cron job: runs daily at 9:00 AM server time
 cron.schedule('0 20 * * *', async () => {
     console.log('⏰ Running daily student parent SMS job at 9:00 AM...');
