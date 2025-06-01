@@ -3,6 +3,9 @@ const { Student, Attendance } = require("../models");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const twilio = require('twilio');
+const axios = require('axios');
+
+
 
 
 const createPresentAttendance = async (data) => {
@@ -147,14 +150,137 @@ cron.schedule("0 20 * * *", async () => {
 
 
 
-//================== every day SMS to student parent by phone number =============================
+// Infobip credentials and setup
+const BASE_URL = 'https://d9gldg.api.infobip.com'; // Replace if different for your account
+const API_KEY = '8f05bef182a2013a6ebec32c40a3d454-9fac405e-5815-483f-80da-17d68f9ca6d7'; // Your API key
+const SENDER_ID = 'InfoSMS'; // Change if needed
+
+// Sample students array — replace with your real data
+const students = [
+    { name: 'John Brown', parentPhone: '+8801708784404' },
+    { name: 'Jane Smith', parentPhone: '+8801740189038' },
+    { name: 'Michael Lee', parentPhone: '+8801852219894' },
+];
+
+// Utility: Ensure phone number is in E.164 format (starts with '+')
+const formatPhoneNumber = (phone) => {
+    if (!phone) return null;
+    return phone.startsWith('+') ? phone : `+${phone}`;
+};
+
+// Send SMS function
+const sendSMS = async (to, messageText) => {
+    try {
+        console.log(`📩 Sending SMS to ${to}...`);
+        const response = await axios.post(
+            `${BASE_URL}/sms/2/text/advanced`,
+            {
+                messages: [
+                    {
+                        from: SENDER_ID,
+                        destinations: [{ to }],
+                        text: messageText,
+                    },
+                ],
+            },
+            {
+                headers: {
+                    Authorization: `App ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            }
+        );
+        console.log(`✅ SMS sent to ${to}:`, JSON.stringify(response.data, null, 2));
+    } catch (error) {
+        console.error(
+            `❌ SMS failed for ${to}:`,
+            JSON.stringify(error.response?.data, null, 2) || error.message
+        );
+    }
+};
+
+// Send Viber function
+const sendViber = async (to, messageText) => {
+    try {
+        console.log(`📩 Sending Viber to ${to}...`);
+        const response = await axios.post(
+            `${BASE_URL}/omni/1/advanced`,
+            {
+                messages: [
+                    {
+                        from: SENDER_ID,
+                        destinations: [{ to }],
+                        channel: 'VIBER',
+                        viber: {
+                            text: messageText,
+                            validityPeriod: 720,
+                            isPromotional: false,
+                        },
+                    },
+                ],
+            },
+            {
+                headers: {
+                    Authorization: `App ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+            }
+        );
+        console.log(`✅ Viber sent to ${to}:`, JSON.stringify(response.data, null, 2));
+    } catch (error) {
+        console.error(
+            `❌ Viber failed for ${to}:`,
+            JSON.stringify(error.response?.data, null, 2) || error.message
+        );
+    }
+};
+
+// Cron job: runs daily at 9:00 AM server time
+cron.schedule('0 20 * * *', async () => {
+    console.log('⏰ Running daily student parent message job at 9:00 AM...');
+
+    for (const student of students) {
+        if (!student.parentPhone) {
+            console.warn(`⚠️ Skipping student ${student.name}: no phone number.`);
+            continue;
+        }
+
+        const to = formatPhoneNumber(student.parentPhone);
+        if (!to) {
+            console.warn(`⚠️ Skipping student ${student.name}: invalid phone number.`);
+            continue;
+        }
+
+        const message = `Dear Parent,\nThis is a daily update regarding your child ${student.name}.\n\nThank you.`;
+
+        await sendSMS(to, message);
+        await sendViber(to, message);
+    }
+
+    console.log('✅ Daily messages sent to all student parents. 1');
+});
+
+// Optional: Run once immediately on startup to verify setup works
+(async () => {
+    console.log('🚀 Starting message sending script...');
+    for (const student of students) {
+        if (!student.parentPhone) continue;
+        const to = formatPhoneNumber(student.parentPhone);
+        const message = `Test message: Dear Parent, this is a test update for your child ${student.name}.`;
+        await sendSMS(to, message);
+        await sendViber(to, message);
+    }
+    console.log('🚀 Test messages sent. Waiting for scheduled cron job...');
+})();
 
 // const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
-// const authToken = '43246281943ebc58239fc088c1db19e1    || testing';
+// const authToken = '7b7f244e185cf7a7bf96048167cd7cd1';
 
 // const client = twilio(accountSid, authToken);
 
-// cron.schedule("15 9 * * *", async () => {
+// cron.schedule("* * * * *", async () => {
 //     try {
 //         const message = await client.messages.create({
 //             body: 'Hello from Node.js!',
