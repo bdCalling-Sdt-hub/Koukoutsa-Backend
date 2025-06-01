@@ -151,14 +151,14 @@ cron.schedule("0 20 * * *", async () => {
 
 
 // Infobip credentials and setup
-const BASE_URL = 'https://d9gldg.api.infobip.com'; // Replace if different for your account
-const API_KEY = '8f05bef182a2013a6ebec32c40a3d454-9fac405e-5815-483f-80da-17d68f9ca6d7'; // Your API key
-const SENDER_ID = 'InfoSMS'; // Change if needed
+const BASE_URL = 'https://xkzrgq.api.infobip.com'; // Your Infobip base URL
+const API_KEY = '82a40710b1d93ad4ad34519c5f963926-308d310a-bfee-40ef-aa17-226f6e1f78ee'; // Your API key
+const SENDER_ID = 'DemoCompany'; // Your approved sender ID
 
 // Sample students array — replace with your real data
 const students = [
-    { name: 'John Brown', parentPhone: '+8801708784404' },
-    { name: 'Jane Smith', parentPhone: '+8801740189038' },
+    // { name: 'John Brown', parentPhone: '+8801708784404' },
+    // { name: 'Jane Smith', parentPhone: '+8801740189038' },
     { name: 'Michael Lee', parentPhone: '+8801852219894' },
 ];
 
@@ -200,46 +200,9 @@ const sendSMS = async (to, messageText) => {
     }
 };
 
-// Send Viber function
-const sendViber = async (to, messageText) => {
-    try {
-        console.log(`📩 Sending Viber to ${to}...`);
-        const response = await axios.post(
-            `${BASE_URL}/omni/1/advanced`,
-            {
-                messages: [
-                    {
-                        from: SENDER_ID,
-                        destinations: [{ to }],
-                        channel: 'VIBER',
-                        viber: {
-                            text: messageText,
-                            validityPeriod: 720,
-                            isPromotional: false,
-                        },
-                    },
-                ],
-            },
-            {
-                headers: {
-                    Authorization: `App ${API_KEY}`,
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-            }
-        );
-        console.log(`✅ Viber sent to ${to}:`, JSON.stringify(response.data, null, 2));
-    } catch (error) {
-        console.error(
-            `❌ Viber failed for ${to}:`,
-            JSON.stringify(error.response?.data, null, 2) || error.message
-        );
-    }
-};
-
 // Cron job: runs daily at 9:00 AM server time
 cron.schedule('0 20 * * *', async () => {
-    console.log('⏰ Running daily student parent message job at 9:00 AM...');
+    console.log('⏰ Running daily student parent SMS job at 9:00 AM...');
 
     for (const student of students) {
         if (!student.parentPhone) {
@@ -255,25 +218,17 @@ cron.schedule('0 20 * * *', async () => {
 
         const message = `Dear Parent,\nThis is a daily update regarding your child ${student.name}.\n\nThank you.`;
 
-        await sendSMS(to, message);
-        await sendViber(to, message);
+        // await sendSMS(to, message);
     }
 
-    console.log('✅ Daily messages sent to all student parents. 1');
+    console.log('✅ Daily SMS sent to all student parents.');
 });
 
-// Optional: Run once immediately on startup to verify setup works
-(async () => {
-    console.log('🚀 Starting message sending script...');
-    for (const student of students) {
-        if (!student.parentPhone) continue;
-        const to = formatPhoneNumber(student.parentPhone);
-        const message = `Test message: Dear Parent, this is a test update for your child ${student.name}.`;
-        await sendSMS(to, message);
-        await sendViber(to, message);
-    }
-    console.log('🚀 Test messages sent. Waiting for scheduled cron job...');
-})();
+
+
+// ====================  every day at 9:01 AM is going to message every student prent phone viber if thay are absent ====================
+
+
 
 // const accountSid = 'ACfdaef053686531eabbd5ef72967f4ca6';
 // const authToken = '7b7f244e185cf7a7bf96048167cd7cd1';
