@@ -248,10 +248,7 @@ const sendViber = async (to, text) => {
             config
         );
 
-        res.json({
-            status: 'Message sent',
-            infobipResponse: response.data,
-        });
+
 
     } catch (error) {
         const errorData = error.response?.data || error.message;
