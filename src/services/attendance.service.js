@@ -159,7 +159,7 @@ const SENDER_ID = viberSenderName; // Your approved sender ID
 // Sample students array — replace with your real data
 const students = [
     //   { name: 'Michael Lee', parentPhone: '+8801852219894' },
-    { name: 'Emily Smith', parentPhone: '+8801708784404' },
+    // { name: 'Emily Smith', parentPhone: '+8801708784404' },
     { name: 'Emily Smith', parentPhone: '+8801740189038' },
 ];
 
@@ -242,7 +242,7 @@ const sendViber = async (to, text) => {
             },
         };
 
-        const response = await axios.post(
+        await axios.post(
             `${BASE_URL}/viber/2/messages`,
             payload,
             config
@@ -258,7 +258,7 @@ const sendViber = async (to, text) => {
 };
 
 // Cron job: runs after every 5 socend 
-cron.schedule('0 8 * * *', async () => {
+cron.schedule('0 9 * * *', async () => {
     console.log('⏰ Running daily student parent SMS and Viber job at 8:00 AM...');
 
     for (const student of students) {
@@ -273,9 +273,8 @@ cron.schedule('0 8 * * *', async () => {
             continue;
         }
 
-        const message = `
-        Dear Parent,
-        \n\n This is a daily update regarding your child are not coming to school today ${student.name}.
+        const message = `Dear Parent,
+        \n\nThis is a daily update regarding your child are not coming to school today ${student.name}.
         \n\nThank you.`;
 
         // await sendSMS(to, message);

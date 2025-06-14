@@ -8,12 +8,16 @@ const getAllNotifications = async (req, res, next) => {
 };
 
 const unreadNotification = async (id) => {
+    // Find the notification with the provided id
     const notifications = await Notification.find({ _id: id });
 
-    await Notification.updateMany({ status: "read" });
+    // Update the specific notification to "read"
+    await Notification.updateOne({ _id: id }, { status: "read" });
 
+    // Return the found notifications
     return notifications;
 };
+
 
 module.exports = {
     getAllNotifications,
