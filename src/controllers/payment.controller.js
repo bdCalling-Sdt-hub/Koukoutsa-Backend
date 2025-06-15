@@ -32,8 +32,36 @@ const getAllPayment = catchAsync(async (req, res) => {
     );
 });
 
+const getIncomeStatistics = catchAsync(async (req, res) => {
+
+    const payment = await paymentService.getIncomeStatistics();
+
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Payment retrieved successfully",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: payment,
+        })
+    );
+});
+
+const getTotalUserAndTotalIncome = catchAsync(async (req, res) => {
+    const { totalUsers, totalIncome } = await paymentService.getTotalUserAndTotalIncome();
+    res.status(httpStatus.OK).json(
+        response({
+            message: "Payment retrieved successfully",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: { totalUsers, totalIncome },
+        })
+    );
+});
+
 
 module.exports = {
     createPayment,
-    getAllPayment
+    getAllPayment,
+    getIncomeStatistics,
+    getTotalUserAndTotalIncome
 };

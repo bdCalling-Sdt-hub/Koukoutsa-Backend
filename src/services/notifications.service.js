@@ -2,7 +2,7 @@ const { Notification } = require("../models");
 
 
 const getAllNotifications = async (req, res, next) => {
-    const notifications = await Notification.find();
+    const notifications = await Notification.find().sort({ createdAt: -1 });
     const unread = await Notification.find({ status: "unread" });
     return { notifications, unread: unread.length };
 };

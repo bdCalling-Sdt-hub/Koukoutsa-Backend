@@ -15,6 +15,13 @@ router
 router
     .route("/all")
     .get(auth("user"), paymentController.getAllPayment);
+router
+    .route('/income-statistics')
+    .get(auth('common'), paymentController.getIncomeStatistics)
+
+router
+    .route("/totaluser-and-totalIncome")
+    .get(auth("common"), paymentController.getTotalUserAndTotalIncome);
 
 
 module.exports = router;
