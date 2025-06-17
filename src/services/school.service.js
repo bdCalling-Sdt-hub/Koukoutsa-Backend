@@ -2,6 +2,7 @@ const httpStatus = require("http-status");
 const { Student, Attendance } = require("../models");
 const School = require("../models/school.model");
 const ApiError = require("../utils/ApiError");
+const Class = require("../models/school.model");
 
 const createSchool = async (schoolData, userId) => {
 
@@ -13,6 +14,13 @@ const getSchoolAll = async () => {
     const schools = await School.find();
     return schools;
 };
+
+
+const getSchoolAllClasses = async ({ schoolId }) => {
+    const classes = await Class.find({ schoolId }).populate("studentsIds");
+    return classes;
+};
+
 const getSchoolById = async (schoolId) => {
     const school = await School.findById(schoolId);
     return school;
@@ -75,6 +83,7 @@ module.exports = {
     createSchool,
     getSchoolById,
     getSchoolAll,
+    getSchoolAllClasses,
     updateSchool,
     deleteSchool,
     addStudentToClass

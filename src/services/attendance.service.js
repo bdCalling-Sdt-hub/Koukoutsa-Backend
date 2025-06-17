@@ -30,6 +30,7 @@ const createPresentAttendance = async (data) => {
             $set: { attendanceType: "present" },
         }
     );
+    console.log(updatedResult);
     if (updatedResult.modifiedCount === 0) {
         throw new ApiError(httpStatus.NOT_FOUND, "No attendance records found");
     }

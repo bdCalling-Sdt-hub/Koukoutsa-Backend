@@ -20,6 +20,12 @@ router
         schoolController.getSchoolAll
     )
 router
+    .route("/school-all-classes")
+    .get(
+        auth("user"),
+        schoolController.getSchoolAllClasses
+    )
+router
     .route("/:schoolId")
     .get(
         auth("user"),

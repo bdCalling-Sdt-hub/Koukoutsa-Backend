@@ -30,6 +30,20 @@ const getSchoolAll = catchAsync(async (req, res) => {
     );
 });
 
+const getSchoolAllClasses = catchAsync(async (req, res) => {
+    const { _id } = req.user;
+
+    const classes = await schoolService.getSchoolAllClasses({ schoolId: _id });
+    res.status(httpStatus.OK).json(
+        response({
+            message: "All Classes",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: classes,
+        })
+    );
+});
+
 const getSchool = catchAsync(async (req, res) => {
     const { schoolId } = req.params;
     const school = await schoolService.getSchoolById(schoolId);
@@ -68,7 +82,7 @@ const deleteSchool = catchAsync(async (req, res) => {
 });
 
 const addStudentToClass = catchAsync(async (req, res) => {
-   
+
     const { classId, studentId } = req.body;
     const school = await schoolService.addStudentToClass(classId, studentId);
     res.status(httpStatus.OK).json(
@@ -79,7 +93,7 @@ const addStudentToClass = catchAsync(async (req, res) => {
             data: school,
         })
     );
-    
+
 });
 
 
@@ -87,6 +101,7 @@ const addStudentToClass = catchAsync(async (req, res) => {
 module.exports = {
     createSchool,
     getSchoolAll,
+    getSchoolAllClasses,
     getSchool,
     updateSchool,
     deleteSchool,

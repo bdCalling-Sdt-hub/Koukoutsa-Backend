@@ -91,6 +91,7 @@ const verifyEmail = async (reqBody, reqQuery) => {
   const { email, code: oneTimeCode } = reqBody;
   console.log("reqBody", email);
   console.log("reqQuery", oneTimeCode);
+  
   const user = await userService.getUserByEmail(email);
   
   // if(user.oneTimeCode === 'verified'){
