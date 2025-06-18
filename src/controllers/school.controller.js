@@ -4,8 +4,6 @@ const schoolService = require("../services/school.service");
 const response = require("../config/response");
 
 
-
-
 const createSchool = catchAsync(async (req, res) => {
     const { _id } = req.user;
     const school = await schoolService.createSchool(req.body, _id);
@@ -18,6 +16,7 @@ const createSchool = catchAsync(async (req, res) => {
         })
     );
 });
+
 const getSchoolAll = catchAsync(async (req, res) => {
     const schools = await schoolService.getSchoolAll();
     res.status(httpStatus.OK).json(

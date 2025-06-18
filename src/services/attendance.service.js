@@ -8,7 +8,6 @@ const { infoBipApiKey, infoBipBaseUrl, viberSenderName } = require("../config/co
 
 
 
-
 const createPresentAttendance = async (data) => {
     const { studentId } = data;
     if (!studentId || !Array.isArray(studentId) || studentId.length === 0) {
@@ -118,7 +117,9 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 };
 
 
-
+// ===========================================================================================================================
+// =========================================== Attendance Records Scheduling ================================================= 
+// ===========================================================================================================================
 
 
 // create Attendance records every this day at 8:00 PM
@@ -151,18 +152,11 @@ cron.schedule("0 20 * * *", async () => {
 
 
 
-
 // Infobip credentials and setup
 const BASE_URL = infoBipBaseUrl; // Your Infobip base URL
 const API_KEY = infoBipApiKey; // Your API key
 const SENDER_ID = viberSenderName; // Your approved sender ID
 
-// Sample students array — replace with your real data
-const students = [
-    //   { name: 'Michael Lee', parentPhone: '+8801852219894' },
-    // { name: 'Emily Smith', parentPhone: '+8801708784404' },
-    { name: 'Emily Smith', parentPhone: '+8801740189038' },
-];
 
 // Utility: Ensure phone number is in E.164 format (starts with '+')
 const formatPhoneNumber = (phone) => {
@@ -171,7 +165,6 @@ const formatPhoneNumber = (phone) => {
 };
 
 // Send SMS function
-
 const sendSMS = async (to, messageText) => {
     try {
         console.log(`📩 Sending SMS to ${to}...`);
@@ -203,21 +196,14 @@ const sendSMS = async (to, messageText) => {
     }
 };
 
-
 // Send Viber function
 const sendViber = async (to, text) => {
     try {
-
-
         const payload = {
             messages: [
                 {
-                    sender: SENDER_ID,  // Your sender's number
-                    destinations: [
-                        {
-                            to: "+8801852219894",
-                        },
-                    ],
+                    sender: SENDER_ID,
+                    destinations: [{ to }],
                     content: {
                         text: text,
                         type: 'TEXT',
@@ -243,50 +229,100 @@ const sendViber = async (to, text) => {
             },
         };
 
-        await axios.post(
+        const response = await axios.post(
             `${BASE_URL}/viber/2/messages`,
             payload,
             config
         );
 
-
+        console.log("Viber response:", response.data); // Log the Viber API response
 
     } catch (error) {
         const errorData = error.response?.data || error.message;
         console.error('Full error details:', JSON.stringify(errorData, null, 2));
-
+        if (error.response) {
+            console.error('Response error status:', error.response.status);
+            console.error('Response error data:', error.response.data);
+        }
     }
 };
 
-// Cron job: runs after every 5 socend 
-cron.schedule('0 9 * * *', async () => {
-    console.log('⏰ Running daily student parent SMS and Viber job at 8:00 AM...');
+// Helper function to convert time string (e.g. "12:00 PM") to Date object
+const convertToDate = (timeStr) => {
+    const [time, modifier] = timeStr.split(' ');  // Extract time and AM/PM part
+    let [hours, minutes] = time.split(':');  // Split into hours and minutes
 
-    for (const student of students) {
-        if (!student.parentPhone) {
-            console.warn(`⚠️ Skipping student ${student.name}: no phone number.`);
-            continue;
-        }
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
 
-        const to = formatPhoneNumber(student.parentPhone);
-        if (!to) {
-            console.warn(`⚠️ Skipping student ${student.name}: invalid phone number.`);
-            continue;
-        }
-
-        const message = `Dear Parent,
-        \n\nThis is a daily update regarding your child are not coming to school today ${student.name}.
-        \n\nThank you.`;
-
-        // await sendSMS(to, message);
-        await sendViber(to, message);
+    // Convert time to 24-hour format for comparison
+    if (modifier === 'PM' && hours !== 12) {
+        hours += 12; // Convert PM times (except 12 PM) to 24-hour format
+    } else if (modifier === 'AM' && hours === 12) {
+        hours = 0; // Convert 12 AM to 00 hours (midnight)
     }
 
-    console.log('✅ Daily SMS and Viber messages sent to all student parents.');
+    // Create Date object for 1st January 1970 with the converted hours and minutes
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);  // Set hours and minutes, with 0 seconds and milliseconds
+    return date;
+};
+
+cron.schedule('0 9 * * *', async () => {
+
+    const now = new Date();
+    const currentTime = convertToDate(`${now.getHours() % 12}:${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`);
+
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);  // Set the time to midnight (start of today)
+
+    const students = await Attendance.find({
+        attendanceType: "absent",
+        classDate: { $gte: todayStart }  // Ensure classDate is today or later
+    }).populate("studentId").populate("classId");
+
+    console.log(students);
+
+    if (!students || students.length === 0) {
+        console.warn('⚠️ No students found to send daily SMS and Viber messages.');
+        return;
+    }
+
+    // Prepare the message to send to each parent
+    for (const student of students) {
+        // Ensure that we have a valid contact number for the parent
+        if (!student.studentId.contactPerson1Number) {
+            console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no parent contact number.`);
+            continue;
+        }
+
+        // Convert the setAlertTime to Date object for comparison
+        const classAlertTime = convertToDate(student.classId.setAlertTime);
+
+        // Compare if the class alert time is equal to the current time
+        if (classAlertTime.getTime() === currentTime.getTime()) {
+            // Only send SMS if the times match
+
+            // Format the phone number (if necessary)
+            const to = formatPhoneNumber(student.studentId.countryCode + student.studentId.contactPerson1Number);
+            if (!to) {
+                console.warn(`⚠️ Skipping student ${student.studentId.studentName}: invalid phone number.`);
+                continue;
+            }
+
+            // Construct the message for the parent
+            const message = `Dear Parent,\n\nThis is a daily update regarding your child, ${student.studentId.studentName}, who is absent from school today.\n\nThank you.`;
+
+            // Send SMS message to the parent's phone
+            await sendSMS(to, message); // Send SMS message to the parent
+
+            // Send Viber message to the parent
+            await sendViber(to, message);
+
+            console.log(`✅ SMS sent to ${to} for student ${student.studentId.studentName}`);
+        }
+    }
 });
-
-
-
 
 module.exports = {
     createPresentAttendance,

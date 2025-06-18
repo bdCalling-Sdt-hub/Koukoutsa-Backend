@@ -17,12 +17,12 @@ const getSchoolAll = async () => {
 
 
 const getSchoolAllClasses = async ({ schoolId }) => {
-    const classes = await Class.find({ schoolId }).populate("studentsIds");
+    const classes = await Class.find({ schoolId });
     return classes;
 };
 
 const getSchoolById = async (schoolId) => {
-    const school = await School.findById(schoolId);
+    const school = await School.findById(schoolId).populate("studentsIds");
     return school;
 };
 
