@@ -268,7 +268,7 @@ const convertToDate = (timeStr) => {
     return date;
 };
 
-cron.schedule('0 9 * * *', async () => {
+cron.schedule('* * * * *', async () => {
 
     const now = new Date();
     const currentTime = convertToDate(`${now.getHours() % 12}:${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`);
@@ -281,7 +281,7 @@ cron.schedule('0 9 * * *', async () => {
         classDate: { $gte: todayStart }  // Ensure classDate is today or later
     }).populate("studentId").populate("classId");
 
-    console.log(students);
+    // console.log(students);
 
     if (!students || students.length === 0) {
         console.warn('⚠️ No students found to send daily SMS and Viber messages.');
@@ -300,7 +300,7 @@ cron.schedule('0 9 * * *', async () => {
         const classAlertTime = convertToDate(student.classId.setAlertTime);
 
         // Compare if the class alert time is equal to the current time
-        if (classAlertTime.getTime() === currentTime.getTime()) {
+        // if (classAlertTime.getTime() === currentTime.getTime()) {
             // Only send SMS if the times match
 
             // Format the phone number (if necessary)
@@ -317,10 +317,10 @@ cron.schedule('0 9 * * *', async () => {
             await sendSMS(to, message); // Send SMS message to the parent
 
             // Send Viber message to the parent
-            await sendViber(to, message);
+            // await sendViber(to, message);
 
             console.log(`✅ SMS sent to ${to} for student ${student.studentId.studentName}`);
-        }
+        // }
     }
 });
 
