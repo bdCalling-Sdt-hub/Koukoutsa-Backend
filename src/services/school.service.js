@@ -49,6 +49,7 @@ const addStudentToClass = async (classId, studentId) => {
         throw new ApiError(httpStatus.BAD_REQUEST, "Student already in class");
     }
 
+
     // Add student to class
     classData.studentsIds.push(studentId);
     student.classId = classId;
@@ -57,13 +58,19 @@ const addStudentToClass = async (classId, studentId) => {
     await classData.save();
     await student.save();
 
+    // console.log(student);
+
+
+
     // Prepare attendance records for ALL students currently in the class
-    const attendanceRecords = classData.studentsIds.map(sId => ({
-        studentId: sId,
+    const attendanceRecords = {
+        studentId: studentId,
         classId,
+        schoolId: student.schoolId,  // Assuming classData has a schoolId field
         classDate: new Date(),
         attendanceType: "absent",  // default value; adjust as needed
-    }));
+    };
+ 
 
     // Insert attendance records in bulk
     try {

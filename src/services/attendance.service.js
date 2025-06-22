@@ -122,8 +122,9 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 // ===========================================================================================================================
 
 
-// create Attendance records every this day at 8:00 PM
-cron.schedule("0 20 * * *", async () => {
+cron.schedule("1 1 * * *", async () => {
+    console.log(" ============================= Creating attendance records every day at 11 AM... ==============================");
+
     try {
         const students = await Student.find({ classId: { $exists: true, $ne: null } });
 
@@ -149,6 +150,7 @@ cron.schedule("0 20 * * *", async () => {
         console.error("Error creating attendance records:", error);
     }
 });
+
 
 
 
@@ -268,61 +270,61 @@ const convertToDate = (timeStr) => {
     return date;
 };
 
-cron.schedule('* * * * *', async () => {
+// cron.schedule('* * * * *', async () => {
 
-    const now = new Date();
-    const currentTime = convertToDate(`${now.getHours() % 12}:${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`);
+//     const now = new Date();
+//     const currentTime = convertToDate(`${now.getHours() % 12}:${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`);
 
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);  // Set the time to midnight (start of today)
+//     const todayStart = new Date();
+//     todayStart.setHours(0, 0, 0, 0);  // Set the time to midnight (start of today)
 
-    const students = await Attendance.find({
-        attendanceType: "absent",
-        classDate: { $gte: todayStart }  // Ensure classDate is today or later
-    }).populate("studentId").populate("classId");
+//     const students = await Attendance.find({
+//         attendanceType: "absent",
+//         classDate: { $gte: todayStart }  // Ensure classDate is today or later
+//     }).populate("studentId").populate("classId");
 
-    // console.log(students);
+//     // console.log(students);
 
-    if (!students || students.length === 0) {
-        console.warn('⚠️ No students found to send daily SMS and Viber messages.');
-        return;
-    }
+//     if (!students || students.length === 0) {
+//         console.warn('⚠️ No students found to send daily SMS and Viber messages.');
+//         return;
+//     }
 
-    // Prepare the message to send to each parent
-    for (const student of students) {
-        // Ensure that we have a valid contact number for the parent
-        if (!student.studentId.contactPerson1Number) {
-            console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no parent contact number.`);
-            continue;
-        }
+//     // Prepare the message to send to each parent
+//     for (const student of students) {
+//         // Ensure that we have a valid contact number for the parent
+//         if (!student.studentId.contactPerson1Number) {
+//             console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no parent contact number.`);
+//             continue;
+//         }
 
-        // Convert the setAlertTime to Date object for comparison
-        const classAlertTime = convertToDate(student.classId.setAlertTime);
+//         // Convert the setAlertTime to Date object for comparison
+//         const classAlertTime = convertToDate(student.classId.setAlertTime);
 
-        // Compare if the class alert time is equal to the current time
-        // if (classAlertTime.getTime() === currentTime.getTime()) {
-            // Only send SMS if the times match
+//         // Compare if the class alert time is equal to the current time
+//         // if (classAlertTime.getTime() === currentTime.getTime()) {
+//         // Only send SMS if the times match
 
-            // Format the phone number (if necessary)
-            const to = formatPhoneNumber(student.studentId.countryCode + student.studentId.contactPerson1Number);
-            if (!to) {
-                console.warn(`⚠️ Skipping student ${student.studentId.studentName}: invalid phone number.`);
-                continue;
-            }
+//         // Format the phone number (if necessary)
+//         const to = formatPhoneNumber(student.studentId.countryCode + student.studentId.contactPerson1Number);
+//         if (!to) {
+//             console.warn(`⚠️ Skipping student ${student.studentId.studentName}: invalid phone number.`);
+//             continue;
+//         }
 
-            // Construct the message for the parent
-            const message = `Dear Parent,\n\nThis is a daily update regarding your child, ${student.studentId.studentName}, who is absent from school today.\n\nThank you.`;
+//         // Construct the message for the parent
+//         const message = `Dear Parent,\n\nThis is a daily update regarding your child, ${student.studentId.studentName}, who is absent from school today.\n\nThank you.`;
 
-            // Send SMS message to the parent's phone
-            await sendSMS(to, message); // Send SMS message to the parent
+//         // Send SMS message to the parent's phone
+//         // await sendSMS(to, message); // Send SMS message to the parent
 
-            // Send Viber message to the parent
-            // await sendViber(to, message);
+//         // Send Viber message to the parent
+//         // await sendViber(to, message);
 
-            console.log(`✅ SMS sent to ${to} for student ${student.studentId.studentName}`);
-        // }
-    }
-});
+//         // console.log(`✅ SMS sent to ${to} for student ${student.studentId.studentName}`);
+//         // }
+//     }
+// });
 
 module.exports = {
     createPresentAttendance,
