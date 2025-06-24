@@ -123,7 +123,7 @@ const getStudentsByDate = async ({ userId, classId, date }) => {
 
 
 cron.schedule("1 1 * * *", async () => {
-    console.log(" ============================= Creating attendance records every day at 11 AM... ==============================");
+    console.log(" ============================= Creating attendance records every day at 1:01 AM... ==============================");
 
     try {
         const students = await Student.find({ classId: { $exists: true, $ne: null } });
@@ -150,7 +150,6 @@ cron.schedule("1 1 * * *", async () => {
         console.error("Error creating attendance records:", error);
     }
 });
-
 
 
 

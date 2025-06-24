@@ -10,18 +10,18 @@ const auth = require("../../middlewares/auth");
 
 router
     .route("/")
-    .post(auth("user"),validate(schoolValidation.createSchool),schoolController.createSchool)
-    .get(auth("user"),schoolController.getSchoolAll)
+    .post(auth("user"), validate(schoolValidation.createSchool), schoolController.createSchool)
+    .get(auth("user"), schoolController.getSchoolAll)
 
 router
     .route("/school-all-classes")
-    .get(auth("user"),schoolController.getSchoolAllClasses)
+    .get(auth("user"), schoolController.getSchoolAllClasses)
 
 router
     .route("/:schoolId")
-    .get(auth("user"),schoolController.getSchool)
-    .patch(auth("user"),schoolController.updateSchool)
-    .delete(auth("user"),schoolController.deleteSchool);
+    .get(auth("user"), schoolController.getSchool)
+    .patch(auth("user"), schoolController.updateSchool)
+    .delete(auth("user"), schoolController.deleteSchool);
 
 router
     .route("/add-student")
