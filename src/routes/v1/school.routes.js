@@ -21,7 +21,7 @@ router
     .route("/:schoolId")
     .get(auth("user"), schoolController.getSchool)
     .patch(auth("user"), schoolController.updateSchool)
-    .delete(auth("user"), schoolController.deleteSchool);
+    .delete(auth("user"), schoolController.deleteSchool); 
 
 router
     .route("/add-student")
