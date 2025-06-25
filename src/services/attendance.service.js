@@ -156,7 +156,7 @@ cron.schedule("1 1 * * *", async () => {
 // Infobip credentials and setup
 const BASE_URL = infoBipBaseUrl; // Your Infobip base URL
 const API_KEY = infoBipApiKey; // Your API key
-const SENDER_ID = viberSenderName; // Your approved sender ID
+const SENDER_ID = viberSenderName; // Your approved sender ID 
 
 
 // Utility: Ensure phone number is in E.164 format (starts with '+') 
