@@ -15,7 +15,7 @@ router
 
 router
     .route("/school-all-classes")
-    .get(auth("user"), schoolController.getSchoolAllClasses)
+    .get(auth("user"), schoolController.getSchoolAllClasses) 
 
 router
     .route("/:schoolId")
