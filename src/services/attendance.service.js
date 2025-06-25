@@ -159,7 +159,7 @@ const API_KEY = infoBipApiKey; // Your API key
 const SENDER_ID = viberSenderName; // Your approved sender ID
 
 
-// Utility: Ensure phone number is in E.164 format (starts with '+')
+// Utility: Ensure phone number is in E.164 format (starts with '+') 
 const formatPhoneNumber = (phone) => {
     if (!phone) return null;
     return phone.startsWith('+') ? phone : `+${phone}`;
