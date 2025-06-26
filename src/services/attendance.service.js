@@ -4,7 +4,6 @@ const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const twilio = require('twilio');
 const axios = require('axios');
-const { infoBipApiKey, infoBipBaseUrl, viberSenderName } = require("../config/config");
 
 
 
@@ -151,12 +150,11 @@ cron.schedule("1 1 * * *", async () => {
     }
 });
 
+const { infoBipApiKey, infoBipBaseUrl, viberSenderName } = require("../config/config");
 
-// Infobip credentials and setup
-const BASE_URL = process.env.INFOBIP_BASE_URL; // Your Infobip base URL
-const API_KEY = process.env.INFOBIP_API_KEY; // Your API key
-const SENDER_ID = process.env.VIBER_SENDER_NAME; // Your approved sender ID 
-
+const BASE_URL = infoBipBaseUrl; // Your Infobip base URL
+const API_KEY = infoBipApiKey; // Your API key
+const SENDER_ID = viberSenderName; // Your approved sender ID 
 // Utility: Ensure phone number is in E.164 format (starts with '+') 
 const formatPhoneNumber = (phone) => {
     if (!phone) return null;
@@ -197,6 +195,10 @@ const sendSMS = async (to, messageText) => {
 
 // Helper function to convert time string (e.g. "12:00 PM") to Date object
 const convertToDate = (timeStr) => {
+    if (!timeStr) {
+        throw new Error('Time string is undefined or null');
+    }
+
     const [time, modifier] = timeStr.split(' ');  // Extract time and AM/PM part
     let [hours, minutes] = time.split(':');  // Split into hours and minutes
 
@@ -243,10 +245,16 @@ cron.schedule('* * * * *', async () => {
                 continue;
             }
 
-            console.log(`Processing student: ${student.studentId.studentName}`);
+            console.log(`Processing student: ${student.studentId}`);
+
+            // Ensure classAlertTime exists and is a valid string
+            if (!student.classId?.setAlertTime) {
+                console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no setAlertTime.`);
+                continue;
+            }
 
             // Convert the setAlertTime to Date object for comparison
-            const classAlertTime = convertToDate(student?.classId?.setAlertTime);
+            const classAlertTime = convertToDate(student.classId.setAlertTime);
 
             // Compare if the class alert time is equal to the current time
             if (classAlertTime.getTime() === currentTime.getTime()) {
@@ -266,6 +274,7 @@ cron.schedule('* * * * *', async () => {
         console.error('Error while fetching students or sending messages:', error.message);
     }
 });
+
 
 module.exports = {
     createPresentAttendance,
