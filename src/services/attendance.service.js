@@ -4,7 +4,7 @@ const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const twilio = require('twilio');
 const axios = require('axios');
-
+const { infoBipApiKey, infoBipBaseUrl, viberSenderName } = require("../config/config");
 
 
 const createPresentAttendance = async (data) => {
@@ -150,7 +150,6 @@ cron.schedule("1 1 * * *", async () => {
     }
 });
 
-const { infoBipApiKey, infoBipBaseUrl, viberSenderName } = require("../config/config");
 
 const BASE_URL = infoBipBaseUrl; // Your Infobip base URL
 const API_KEY = infoBipApiKey; // Your API key
@@ -245,7 +244,6 @@ cron.schedule('* * * * *', async () => {
                 continue;
             }
 
-            console.log(`Processing student: ${student.studentId}`);
 
             // Ensure classAlertTime exists and is a valid string
             if (!student.classId?.setAlertTime) {
@@ -254,7 +252,7 @@ cron.schedule('* * * * *', async () => {
             }
 
             // Convert the setAlertTime to Date object for comparison
-            const classAlertTime = convertToDate(student.classId.setAlertTime);
+            const classAlertTime = convertToDate(student?.classId?.setAlertTime);
 
             // Compare if the class alert time is equal to the current time
             if (classAlertTime.getTime() === currentTime.getTime()) {
