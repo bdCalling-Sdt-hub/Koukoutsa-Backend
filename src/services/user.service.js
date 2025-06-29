@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { User, Notification } = require("../models");
+const { User, Notification, Payment } = require("../models");
 const ApiError = require("../utils/ApiError");
 const { sendEmailVerification } = require("./email.service");
 const unlinkImages = require("../common/unlinkImage");
@@ -124,7 +124,7 @@ const isUpdateUser = async (userId, updateBody) => {
 
 
 const getAllUsers = async () => {
-  const totalUsers = await User.find({ role: "user", isDeleted: false });
+  const totalUsers = await User.find({ role: "user", isDeleted: false }).sort({ createdAt: -1 });
   return {
     totalUsers: totalUsers.length,
     users: totalUsers
@@ -132,11 +132,25 @@ const getAllUsers = async () => {
 };
 
 const getUsersStatus = async () => {
+
   const totalUsers = await User.find({ role: "user", isDeleted: false });
   const totalSubscribers = await User.find({ role: "user", isSubscribed: true, isDeleted: false });
+  // aggregate with amount
+  const totalEarnings = await Payment.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalEarnings: { $sum: "$amount" }
+      }
+    }
+  ]);
+
+
+
   return {
     totalUsers: totalUsers.length,
     totalSubscribers: totalSubscribers.length,
+    totalEarnings: totalEarnings[0].totalEarnings
 
   };
 };

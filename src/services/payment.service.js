@@ -25,7 +25,6 @@ const createPayment = async (body, userId) => {
         type: "success",
     });
 
-
     return result;
 }
 
@@ -37,32 +36,6 @@ const getAllPayment = async (userId) => {
 const getIncomeStatistics = async () => {
     const last7Days = new Date();
     last7Days.setDate(last7Days.getDate() - 7); // Get the date for 7 days ago
-
-    // const result = await Payment.aggregate([
-    //     {
-    //         $match: {
-    //             date: { $gte: last7Days } // Filter payments from the last 7 days
-    //         }
-    //     },
-    //     {
-    //         $project: {
-    //             amount: 1, // Assuming 'amount' is the field for income in the Payment model
-    //             day: {
-    //                 $dayOfYear: { $dateFromString: { dateString: "$date" } } // Extract day of the year
-    //             },
-    //             year: { $year: { $dateFromString: { dateString: "$date" } } } // Extract year from the date
-    //         }
-    //     },
-    //     {
-    //         $group: {
-    //             _id: { year: "$year", day: "$day" }, // Group by year and day
-    //             totalIncome: { $sum: "$amount" } // Sum the amount for each day
-    //         }
-    //     },
-    //     {
-    //         $sort: { "_id.year": -1, "_id.day": -1 } // Sort by year and day in descending order
-    //     }
-    // ]);
 
     const result = await Payment.find({}).sort({ date: -1 }).limit(30);
 
