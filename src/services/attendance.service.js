@@ -234,7 +234,7 @@ cron.schedule('* * * * *', async () => {
         if (!students || students.length === 0) {
             // console.warn('⚠️ No students found to send daily SMS and Viber messages.');
             return;
-        }
+        } 
 
         // Prepare the message to send to each parent
         for (const student of students) {
