@@ -1,0 +1,8 @@
+Total classes - total students - present today
+
+Pls fix these mistakes
+Publishing the app - Niki to fill in docs required - Nirob to send the docs after the call today
+
+Niki Matthaiou 3:13 PM
+Payments - stripe - Niki to create an account
+To give the team login access so you can connect the stripe to the app

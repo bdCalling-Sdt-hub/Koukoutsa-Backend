@@ -232,7 +232,7 @@ cron.schedule('* * * * *', async () => {
         }).populate("studentId").populate("classId");
 
         if (!students || students.length === 0) {
-            console.warn('⚠️ No students found to send daily SMS and Viber messages.');
+            // console.warn('⚠️ No students found to send daily SMS and Viber messages.');
             return;
         }
 
