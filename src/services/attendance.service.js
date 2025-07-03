@@ -192,6 +192,12 @@ const sendSMS = async (to, messageText) => {
     }
 };
 
+// cron.schedule("* * * * *", async () => {
+//     await sendSMS("+35799970016", "Hi niki this is a test message from the school attendance system. Please ignore it. if you get it then please tell me. Thanks.");
+
+//     console.log("Test message sent to +447860004979");
+// })
+
 // Helper function to convert time string (e.g. "12:00 PM") to Date object
 const convertToDate = (timeStr) => {
     if (!timeStr) {
@@ -240,14 +246,14 @@ cron.schedule('* * * * *', async () => {
         for (const student of students) {
             // Ensure that we have a valid contact number for the parent
             if (!student.studentId.contactPerson1Number) {
-                console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no parent contact number.`);
+                // console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no parent contact number.`);
                 continue;
             }
 
 
             // Ensure classAlertTime exists and is a valid string
             if (!student.classId?.setAlertTime) {
-                console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no setAlertTime.`);
+                // console.warn(`⚠️ Skipping student ${student.studentId.studentName}: no setAlertTime.`);
                 continue;
             }
 
