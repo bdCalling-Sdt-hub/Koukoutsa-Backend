@@ -277,7 +277,7 @@ cron.schedule('* * * * *', async () => {
     } catch (error) {
         console.error('Error while fetching students or sending messages:', error.message);
     }
-});
+}); 
 
 
 module.exports = {
