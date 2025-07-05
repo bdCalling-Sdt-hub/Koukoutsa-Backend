@@ -194,7 +194,6 @@ const sendSMS = async (to, messageText) => {
 
 // cron.schedule("* * * * *", async () => {
 //     await sendSMS("+35799970016", "Hi niki this is a test message from the school attendance system. Please ignore it. if you get it then please tell me. Thanks.");
-
 //     console.log("Test message sent to +447860004979");
 // })
 
