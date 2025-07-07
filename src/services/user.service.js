@@ -52,9 +52,8 @@ const queryUsers = async (filter, options) => {
   const users = await User.paginate(query, options);
 
   // Convert height and age to feet/inches here...
-
   return users;
-};
+}; 
 
 
 
