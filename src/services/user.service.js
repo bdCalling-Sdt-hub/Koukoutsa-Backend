@@ -59,7 +59,9 @@ const queryUsers = async (filter, options) => {
 
 
 const getUserById = async (id) => {
-  return User.findById(id);
+  const user = await User.findById(id).populate("subscriptionId");
+
+  return user
 };
 
 const getUserByEmail = async (email) => {

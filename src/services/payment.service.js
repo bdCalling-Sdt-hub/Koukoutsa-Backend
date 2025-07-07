@@ -5,6 +5,8 @@ const ApiError = require("../utils/ApiError");
 
 const createPayment = async (body, userId) => {
 
+    console.log(body.subscriptionId);
+
     const findUser = await User.findById(userId);
 
     if (!findUser) {
@@ -14,7 +16,7 @@ const createPayment = async (body, userId) => {
     // Update user subscription fields without await
     findUser.subscriptionId = body.subscriptionId;
     findUser.isSubscribed = true;
-    findUser.subscriptionEndDate = new Date(); // consider setting to future date if needed
+    findUser.subscriptionEndDate = body.expiresDate; // consider setting to future date if needed
 
     await findUser.save();
     const result = await Payment.create({ ...body, userId });

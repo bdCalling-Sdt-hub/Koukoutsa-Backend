@@ -1,5 +1,5 @@
 const cron = require("node-cron");
-const { Student, Attendance } = require("../models");
+const { Student, Attendance, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const twilio = require('twilio');
@@ -276,7 +276,39 @@ cron.schedule('* * * * *', async () => {
     } catch (error) {
         console.error('Error while fetching students or sending messages:', error.message);
     }
-}); 
+});
+
+// cron for finding this user is subscribed or not in a class
+cron.schedule('* * * * *', async () => {
+    try {
+        // Get the current date in the same format (YYYY-MM-DD) for comparison
+        const currentDate = new Date().toISOString().split('T')[0]; // Get today's date in "YYYY-MM-DD" format
+
+        // Get users who are still subscribed and have a valid subscription date
+        const users = await User.find({
+            isSubscribed: true,
+            subscriptionEndDate: { $gte: currentDate } // Compare with the current date
+        });
+
+        // If no users found, exit early
+        if (users.length === 0) return;
+
+        // Update users without classId to set isSubscribed to false
+        const updatePromises = users.map(async (user) => {
+            if (!user.classId) {
+                await User.updateOne({ _id: user._id }, { $set: { isSubscribed: false } });
+            }
+        });
+
+        // Wait for all updates to finish
+        await Promise.all(updatePromises);
+
+        console.log(`Successfully updated ${updatePromises.length} users`);
+
+    } catch (error) {
+        console.error('Error in cron job:', error);
+    }
+});
 
 
 module.exports = {
