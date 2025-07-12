@@ -5,12 +5,15 @@ const ApiError = require("../utils/ApiError");
 
 const createPayment = async (body, userId) => {
 
-    console.log(body.subscriptionId);
+    // console.log(body.subscriptionId);
 
     const findUser = await User.findById(userId);
 
     if (!findUser) {
         throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    }
+    if (findUser.isSubscribed) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "User already subscribed");
     }
 
     // Update user subscription fields without await
@@ -49,8 +52,8 @@ const getTotalUserAndTotalIncome = async () => {
     const result = await Payment.aggregate([
         {
             $group: {
-                _id: null,
-                totalIncome: { $sum: "$amount" }
+                _id: null, // Grouping by null to combine all records into one group
+                totalIncome: { $sum: 1 } // This will count the number of documents
             }
         }
     ]);

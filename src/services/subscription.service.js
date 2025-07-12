@@ -7,7 +7,7 @@ const createSubscription = async (data) => {
 }
 
 const getAllSubscription = async () => {
-    const subscription = await Subscription.find();
+    const subscription = await Subscription.find().sort({ createdAt: -1 });
     return subscription;
 }
 
