@@ -39,10 +39,8 @@ const getAllPayment = async (userId) => {
 }
 
 const getIncomeStatistics = async () => {
-    const last7Days = new Date();
-    last7Days.setDate(last7Days.getDate() - 7); // Get the date for 7 days ago
 
-    const result = await Payment.find({}).sort({ date: -1 }).limit(30);
+    const result = await Payment.find({}).sort({ createdAt: -1 }).limit(30);
 
     return result;
 };

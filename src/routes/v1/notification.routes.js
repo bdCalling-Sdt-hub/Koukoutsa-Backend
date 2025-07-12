@@ -13,6 +13,10 @@ router
     .route("/:id")
     .patch(auth("common"), notificationController.unreadNotification)
 
+router
+    .route("/all/read-all")
+    .patch(auth("common"), notificationController.readAllNotifications);
+
 
 
 

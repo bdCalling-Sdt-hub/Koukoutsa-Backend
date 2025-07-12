@@ -18,8 +18,17 @@ const unreadNotification = async (id) => {
     return notifications;
 };
 
+const readAllNotifications = async () => {
+    // Update all notifications to "read"
+    const notifications = await Notification.updateMany({}, { status: "read" });
+
+    // Return the updated notifications
+    return notifications;
+}
+
 
 module.exports = {
     getAllNotifications,
-    unreadNotification
+    unreadNotification,
+    readAllNotifications
 };

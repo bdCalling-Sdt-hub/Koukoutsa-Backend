@@ -29,8 +29,21 @@ const unreadNotification = catchAsync(async (req, res) => {
     );
 });
 
+const readAllNotifications = catchAsync(async (req, res) => {
+    const notifications = await notificationService.readAllNotifications();
+    res.status(httpStatus.OK).json(
+        response({
+            message: "All notifications marked as read successfully",
+            status: "OK",
+            statusCode: httpStatus.OK,
+            data: notifications,
+        })
+    );
+});
+
 
 module.exports = {
     getAllNotifications,
-    unreadNotification
+    unreadNotification,
+    readAllNotifications
 };
