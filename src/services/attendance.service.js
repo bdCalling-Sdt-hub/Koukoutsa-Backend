@@ -287,7 +287,7 @@ cron.schedule('* * * * *', async () => {
         // Get users who are still subscribed and have a valid subscription date
         const users = await User.find({
             isSubscribed: true,
-            subscriptionEndDate: { $gte: currentDate } // Compare with the current date
+            subscriptionEndDate: { $lte: currentDate } // Compare with the current date
         });
 
         // If no users found, exit early
@@ -303,7 +303,7 @@ cron.schedule('* * * * *', async () => {
         // Wait for all updates to finish
         await Promise.all(updatePromises);
 
-        console.log(`Successfully updated ${updatePromises.length} users`);
+        console.log(`Successfully updated  ${updatePromises.length} users`);
 
     } catch (error) {
         console.error('Error in cron job:', error);

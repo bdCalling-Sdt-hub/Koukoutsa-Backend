@@ -58,8 +58,7 @@ const addStudentToClass = async (classId, studentId) => {
     await classData.save();
     await student.save();
 
-    // console.log(student);
-
+ 
 
 
     // Prepare attendance records for ALL students currently in the class
