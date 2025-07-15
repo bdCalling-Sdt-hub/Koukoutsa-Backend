@@ -58,7 +58,7 @@ const addStudentToClass = async (classId, studentId) => {
     await classData.save();
     await student.save();
 
- 
+
 
 
     // Prepare attendance records for ALL students currently in the class
@@ -69,8 +69,8 @@ const addStudentToClass = async (classId, studentId) => {
         classDate: new Date(),
         attendanceType: "absent",  // default value; adjust as needed
     };
- 
- 
+
+
     // Insert attendance records in bulk
     try {
         await Attendance.insertMany(attendanceRecords);

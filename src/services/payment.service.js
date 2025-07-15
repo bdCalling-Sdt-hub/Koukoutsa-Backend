@@ -40,7 +40,7 @@ const getAllPayment = async (userId) => {
 
 const getIncomeStatistics = async () => {
 
-    const result = await Payment.find({}).sort({ createdAt: -1 }).limit(30);
+    const result = (await Payment.find({}).sort({ createdAt: -1 }).limit(30)).reverse();
 
     return result;
 };
