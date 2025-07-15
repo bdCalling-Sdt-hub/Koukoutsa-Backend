@@ -70,7 +70,7 @@ const addStudentToClass = async (classId, studentId) => {
         attendanceType: "absent",  // default value; adjust as needed
     };
  
-
+ 
     // Insert attendance records in bulk
     try {
         await Attendance.insertMany(attendanceRecords);
