@@ -22,7 +22,7 @@ const createPayment = async (body, userId) => {
     findUser.subscriptionEndDate = body.expiresDate; // consider setting to future date if needed
 
     await findUser.save();
-    const result = await Payment.create({ ...body, userId });
+    const result = await Payment.create({ ...body, userId }); 
 
     await Notification.create({
         userId: userId,
