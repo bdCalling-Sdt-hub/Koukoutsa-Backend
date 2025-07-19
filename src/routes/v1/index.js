@@ -12,6 +12,7 @@ const subscriptionRoute = require("./subscription.routes.js");
 const infoRoute = require("./info.routes.js");
 
 const router = express.Router();
+ 
 
 const defaultRoutes = [
   {
