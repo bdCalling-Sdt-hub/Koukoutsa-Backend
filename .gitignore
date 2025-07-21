@@ -12,5 +12,5 @@ coverage
 
 app.log*
 
-/public
+
 /dist
