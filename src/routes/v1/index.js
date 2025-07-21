@@ -3,7 +3,7 @@ const config = require("../../config/config");
 const authRoute = require("./auth.routes");
 const userRoute = require("./user.routes");
 const docsRoute = require("./docs.routes");
-const schoolRoute = require("./school.routes");  
+const schoolRoute = require("./school.routes");
 const studentRoute = require("./student.routes");
 const attendanceRoute = require("./attendance.routes");
 const paymentRoute = require("./payment.routes");
@@ -12,7 +12,6 @@ const subscriptionRoute = require("./subscription.routes.js");
 const infoRoute = require("./info.routes.js");
 
 const router = express.Router();
-
 
 const defaultRoutes = [
   {
