@@ -9,7 +9,7 @@ const convertHeicToPngMiddleware = require("../../middlewares/converter");
 const UPLOADS_FOLDER_USERS = "./public/uploads/users";
 const uploadUsers = userFileUploadMiddleware(UPLOADS_FOLDER_USERS);
 
-
+ 
 router
     .route("/")
     .post(auth("user"),
