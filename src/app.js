@@ -54,6 +54,11 @@ if (config.env === "production") {
   app.use("/v1/auth", authLimiter);
 }
 
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 // Express Monitor
 app.use(status());
 

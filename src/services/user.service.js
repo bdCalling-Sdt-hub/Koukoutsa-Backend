@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { User, Notification, Payment } = require("../models");
+const { User, Notification, Payment, DeleteUser } = require("../models");
 const ApiError = require("../utils/ApiError");
 const { sendEmailVerification } = require("./email.service");
 const unlinkImages = require("../common/unlinkImage");
@@ -53,7 +53,7 @@ const queryUsers = async (filter, options) => {
 
   // Convert height and age to feet/inches here...
   return users;
-}; 
+};
 
 
 
@@ -161,6 +161,12 @@ const getRecentUsers = async () => {
   return recentUsers;
 };
 
+const deleteRecentUsers = async (data) => {
+  const DeleteUsers = await DeleteUser.create(data);
+  return DeleteUsers;
+};
+
+
 module.exports = {
   createUser,
   queryUsers,
@@ -171,5 +177,6 @@ module.exports = {
   isUpdateUser,
   getAllUsers,
   getUsersStatus,
-  getRecentUsers
+  getRecentUsers,
+  deleteRecentUsers
 };

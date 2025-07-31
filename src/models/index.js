@@ -12,3 +12,4 @@ module.exports.Student = require('./student.model');
 module.exports.Attendance = require('./attendance.model');
 module.exports.Payment = require('./payments.model');
 module.exports.Subscription = require('./subscription.model');
+module.exports.DeleteUser = require('./deleteuser.model');
