@@ -48,5 +48,6 @@ router
   .get(auth("common"), userController.getRecentUsers)
 
 router.post("/delete-request/account", userController.deleteRecentUsers)
+router.get("/all-delete-requests/users", userController.getAllDeleteRequests)
 
 module.exports = router;

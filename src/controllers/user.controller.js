@@ -201,6 +201,17 @@ const deleteRecentUsers = catchAsync(async (req, res) => {
     })
   );
 });
+const getAllDeleteRequests = catchAsync(async (req, res) => {
+  const users = await userService.getAllDeleteRequests();
+  res.status(httpStatus.OK).json(
+    response({
+      message: "All Users",
+      status: "OK",
+      statusCode: httpStatus.OK,
+      data: users,
+    })
+  );
+});
 
 module.exports = {
   createUser,
@@ -214,5 +225,6 @@ module.exports = {
   getUserById,
   getUsersStatus,
   getRecentUsers,
-  deleteRecentUsers
+  deleteRecentUsers,
+  getAllDeleteRequests
 };

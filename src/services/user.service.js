@@ -166,6 +166,11 @@ const deleteRecentUsers = async (data) => {
   return DeleteUsers;
 };
 
+const getAllDeleteRequests = async () => {
+  const DeleteUsers = await DeleteUser.find();
+  return DeleteUsers;
+};
+
 
 module.exports = {
   createUser,
@@ -178,5 +183,6 @@ module.exports = {
   getAllUsers,
   getUsersStatus,
   getRecentUsers,
-  deleteRecentUsers
+  deleteRecentUsers,
+  getAllDeleteRequests
 };
